@@ -738,6 +738,8 @@ body{
     pointer-events:auto;
 
     transition:.25s ease;
+
+    gap:8px;
 }
 
 .search:focus-within{
@@ -1203,7 +1205,6 @@ kbd{
 position:absolute;
 width:300px;
 height:80px;
-top: ;
 right: -90px;
 margin-bottom:20px;
 background:white;
@@ -1396,6 +1397,15 @@ transform: rotate(50deg);
             Go
         </button>
 
+        <button
+    class="go"
+    type="button"
+    onclick="window.open('https://schoollearning-tabs.lervs.ro/', '_blank')"
+>
+    AI
+</button>
+
+
     </form>
 
 </div>
@@ -1510,6 +1520,20 @@ transform: rotate(50deg);
 
         <div class="blockLabel">
             Proxy
+        </div>
+
+    </div>
+
+      <div
+        class="block"
+        data-url=""
+        data-name="AI"
+    >
+
+        <img src="Images/AI.png">
+
+        <div class="blockLabel">
+            AI
         </div>
 
     </div>
