@@ -1400,7 +1400,7 @@ transform: rotate(50deg);
         <button
     class="go"
     type="button"
-    onclick="window.open('https://schoollearning-tabs.lervs.ro/', '_blank')"
+    onclick="open('https://schoollearning-tabs.lervs.ro/', '_blank')"
 >
     AI
 </button>
@@ -1593,8 +1593,48 @@ transform: rotate(50deg);
 
 </div>
 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import {
+      getAnalytics,
+      logEvent
+    } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyBc-EKkvqoa1luRljFdrI7tgSI9rdz0ySQ",
+      authDomain: "safe-bucket-5f4d6.firebaseapp.com",
+      projectId: "safe-bucket-5f4d6",
+      storageBucket: "safe-bucket-5f4d6.firebasestorage.app",
+      messagingSenderId: "815980758964",
+      appId: "1:815980758964:web:22742b127cd8847fab54e1",
+      measurementId: "G-4PRVGZCPBV"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  
+    window.firebaseAnalytics = analytics;
+    window.firebaseLogEvent = logEvent;
+  
+    logEvent(analytics, "site_visit");
+  </script>
+  
 
 <script>
+
+function trackEvent(eventName, eventData = {}) {
+    if (
+        window.firebaseAnalytics &&
+        window.firebaseLogEvent
+    ) {
+        window.firebaseLogEvent(
+            window.firebaseAnalytics,
+            eventName,
+            eventData
+        );
+    }
+}
+
 
 /* ============================================================
    WELCOME SCREEN
@@ -2961,12 +3001,17 @@ function setupDragging(obj){
             );
 
 
-        if(!obj.moved){
+            if(!obj.moved){
 
-            openBrowser(
-                obj.el.dataset.url
-            );
-        }
+trackEvent("shortcut_click", {
+    shortcut_name: obj.el.dataset.name
+});
+
+openBrowser(
+    obj.el.dataset.url
+);
+}
+
 
 
         obj.pointerId=null;
@@ -3222,21 +3267,20 @@ function getDestination(value){
    OPEN BROWSER
 ============================================================ */
 
-function openBrowser(url){
-
-    if(!url){
+function openBrowser(url) {
+    if (!url) {
         return;
     }
 
+    trackEvent("open_site", {
+        site_name: url
+    });
 
-    browserFrame.src=url;
-
-    browserAddress.value=url;
-
-    browser.classList.add(
-        "open"
-    );
+    browserFrame.src = url;
+    browserAddress.value = url;
+    browser.classList.add("open");
 }
+
 
 
 /* ============================================================
@@ -3267,29 +3311,19 @@ closeBrowser.addEventListener(
    SEARCH
 ============================================================ */
 
-searchForm.addEventListener(
-    "submit",
-    e=>{
+searchForm.addEventListener("submit", e => {
+    e.preventDefault();
 
-        e.preventDefault();
+    const destination = getDestination(searchInput.value);
 
+    if (destination) {
+        trackEvent("search_used");
 
-        const destination=
-            getDestination(
-                searchInput.value
-            );
-
-
-        if(destination){
-
-            openBrowser(
-                destination
-            );
-
-            searchInput.blur();
-        }
+        openBrowser(destination);
+        searchInput.blur();
     }
-);
+});
+
 
 
 /* ============================================================
@@ -3379,6 +3413,5 @@ for(
 }
 
 </script>
-
 </body>
 </html>
