@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>CiphAnon Safe Browser</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --bg: #101010;
+    --panel: #171717;
+    --panel2: #1d1d1d;
+    --line: #303030;
+    --text: #f2f2f2;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, Arial, sans-serif;
+}
+
+body {
+    position: relative;
+}
+
+/* =========================
+   WELCOME SCREEN
+========================= */
+
+.welcome {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    background: #0009;
+    backdrop-filter: blur(18px);
+
+    opacity: 1;
+    visibility: visible;
+
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.welcome.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.welcome::before {
+    content: "";
+    position: absolute;
+
+    width: 520px;
+    height: 520px;
+
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle,
+        #ffffff0b 0%,
+        #ffffff04 35%,
+        transparent 70%
+    );
+
+    filter: blur(20px);
+    pointer-events: none;
+
+    animation: welcomeGlow 6s ease-in-out infinite;
+}
+
+@keyframes welcomeGlow {
+    0%,
+    100% {
+        transform: scale(0.88);
+        opacity: 0.55;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+}
+
+.welcomeCard {
+    position: relative;
+
+    width: min(560px, 100%);
+    padding: 34px;
+
+    border-radius: 28px;
+
+    background: linear-gradient(145deg, #1d1d1d, #121212);
+    border: 1px solid #383838;
+
+    box-shadow:
+        0 40px 120px #000,
+        inset 0 1px 0 #ffffff12;
+
+    animation: welcomeIn 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+}
+
+@keyframes welcomeIn {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.welcomeTop {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+/* Fixed welcome logo size */
+.welcomeLogo {
+    width: 64px;
+    height: 64px;
+
+    flex: 0 0 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px;
+
+    border-radius: 19px;
+
+    background: linear-gradient(145deg, #303030, #171717);
+    border: 1px solid #454545;
+
+    box-shadow:
+        0 12px 30px #0008,
+        inset 0 1px 0 #ffffff18;
+}
+
+.welcomeLogo img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    object-position: center;
+
+    border-radius: 10px;
+}
+
+.welcomeTitle {
+    min-width: 0;
+}
+
+.welcomeTitle h1 {
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: -1.4px;
+    font-weight: 850;
+}
+
+.welcomeTitle p {
+    margin-top: 7px;
+    color: #777;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.welcomeIntro {
+    margin-bottom: 25px;
+}
+
+.welcomeIntro h2 {
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    margin-bottom: 9px;
+}
+
+.welcomeIntro p {
+    color: #8c8c8c;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.welcomeSections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.welcomeSection {
+    padding: 16px;
+    min-height: 125px;
+
+    border-radius: 18px;
+
+    background: #181818;
+    border: 1px solid #2e2e2e;
+
+    box-shadow: inset 0 1px 0 #ffffff08;
+}
+
+.welcomeIcon {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    margin-bottom: 12px;
+
+    border-radius: 11px;
+
+    background: #242424;
+    border: 1px solid #383838;
+
+    color: #ddd;
+    font-size: 15px;
+}
+
+.welcomeSection h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+}
+
+.welcomeSection p {
+    color: #777;
+    font-size: 10px;
+    line-height: 1.55;
+}
+
+.creator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 14px 15px;
+    margin-bottom: 16px;
+
+    border-radius: 16px;
+
+    background: #141414;
+    border: 1px solid #292929;
+}
+
+.creatorLeft {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.creatorAvatar {
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: #252525;
+    border: 1px solid #3a3a3a;
+
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.creatorText span {
+    display: block;
+    color: #666;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 3px;
+}
+
+.creatorText strong {
+    font-size: 12px;
+    color: #eee;
+}
+
+.creatorStudio {
+    color: #666;
+    font-size: 9px;
+    text-align: right;
+    letter-spacing: 0.5px;
+}
+
+.enterButton {
+    width: 100%;
+    height: 52px;
+
+    border: 1px solid #444;
+    border-radius: 15px;
+
+    background: #eee;
+    color: #111;
+
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.3px;
+
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.enterButton:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px #0008;
+}
+
+.enterButton:active {
+    transform: scale(0.98);
+}
+
+.welcomeRemember {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    margin-top: 13px;
+
+    color: #505050;
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    user-select: none;
+}
+
+.welcomeRemember input {
+    appearance: none;
+
+    width: 14px;
+    height: 14px;
+
+    border-radius: 4px;
+    border: 1px solid #383838;
+    background: #151515;
+
+    cursor: pointer;
+    position: relative;
+}
+
+.welcomeRemember input:checked {
+    background: #ddd;
+    border-color: #ddd;
+}
+
+.welcomeRemember input:checked::after {
+    content: "✓";
+
+    position: absolute;
+    left: 3px;
+    top: -1px;
+
+    color: #111;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.welcomeRemember label {
+    cursor: pointer;
+}
+
+.welcomeFooter {
+    text-align: center;
+
+    color: #505050;
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    margin-top: 13px;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.bg {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at 50% 45%,
+        #242424 0%,
+        #151515 35%,
+        #0d0d0d 75%
+    );
+}
+
+.grid {
+    position: absolute;
+    inset: -20%;
+    opacity: 0.16;
+
+    background-image:
+        linear-gradient(#fff 1px, transparent 1px),
+        linear-gradient(90deg, #fff 1px, transparent 1px);
+
+    background-size: 70px 70px;
+
+    transform: perspective(500px) rotateX(62deg) translateY(20%);
+    transform-origin: center;
+}
+
+.noise {
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================
+   CENTER CONTENT
+========================= */
+
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: min(700px, calc(100% - 40px));
+    z-index: 500;
+
+    pointer-events: none;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+/* Correct main page logo size */
+.hero .SafeBucketLogo {
+    display: block;
+
+    width: clamp(72px, 12vw, 120px);
+    height: clamp(72px, 12vw, 120px);
+
+    margin: 0 auto 16px;
+
+    object-fit: contain;
+    object-position: center;
+
+    border-radius: 22%;
+    filter: drop-shadow(0 12px 25px #0009);
+
+    pointer-events: none;
+}
+
+.hero h1 {
+    font-size: clamp(30px, 5vw, 52px);
+    letter-spacing: -2.5px;
+    line-height: 1;
+    font-weight: 800;
+}
+
+.hero p {
+    margin-top: 10px;
+    color: #777;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search {
+    height: 62px;
+    width: 100%;
+
+    border-radius: 20px;
+    border: 1px solid #383838;
+
+    background: #191919e8;
+    backdrop-filter: blur(22px);
+
+    display: flex;
+    align-items: center;
+
+    padding: 7px;
+
+    box-shadow:
+        0 25px 70px #0009,
+        inset 0 1px 0 #ffffff12;
+
+    pointer-events: auto;
+    transition: 0.25s ease;
+}
+
+.search:focus-within {
+    border-color: #555;
+
+    box-shadow:
+        0 25px 80px #000,
+        0 0 0 3px #ffffff08,
+        inset 0 1px 0 #ffffff18;
+}
+
+.searchIcon {
+    width: 45px;
+    display: grid;
+    place-items: center;
+
+    color: #777;
+    font-size: 19px;
+}
+
+.search input {
+    flex: 1;
+    height: 100%;
+
+    min-width: 0;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+    color: #eee;
+
+    font-size: 14px;
+}
+
+.search input::placeholder {
+    color: #666;
+}
+
+.go {
+    height: 48px;
+    padding: 0 20px;
+
+    border: 1px solid #444;
+    border-radius: 15px;
+
+    background: #303030;
+    color: #eee;
+
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.go:hover {
+    background: #3b3b3b;
+    transform: translateY(-1px);
+}
+
+/* =========================
+   PHYSICS BLOCKS
+========================= */
+
+.world {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.block {
+    position: absolute;
+
+    width: 148px;
+    height: 148px;
+
+    padding: 8px;
+
+    border-radius: 27px;
+
+    background: linear-gradient(145deg, #343434, #1b1b1b);
+    border: 1px solid #444;
+
+    box-shadow:
+        0 18px 40px #0009,
+        inset 0 1px 0 #ffffff16;
+
+    transform-origin: center;
+
+    user-select: none;
+    touch-action: none;
+    cursor: grab;
+    pointer-events: auto;
+    will-change: transform;
+}
+
+.block.dragging {
+    cursor: grabbing;
+    z-index: 900;
+
+    box-shadow:
+        0 25px 65px #000,
+        0 0 0 2px #ffffff12,
+        inset 0 1px 0 #ffffff20;
+}
+
+.block img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+    border-radius: 20px;
+
+    filter: grayscale(1) contrast(0.9);
+    opacity: 0.8;
+
+    pointer-events: none;
+}
+
+.blockLabel {
+    position: absolute;
+
+    left: 16px;
+    right: 16px;
+    bottom: 15px;
+
+    padding: 7px 9px;
+
+    border-radius: 9px;
+
+    background: #090909aa;
+    border: 1px solid #ffffff0c;
+    backdrop-filter: blur(10px);
+
+    color: #eee;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: center;
+
+    pointer-events: none;
+}
+
+/* =========================
+   BROWSER
+========================= */
+
+.browser {
+    position: fixed;
+    inset: 14px;
+    z-index: 5000;
+
+    display: none;
+    flex-direction: column;
+
+    background: #111;
+    border: 1px solid #383838;
+    border-radius: 22px;
+
+    box-shadow: 0 35px 100px #000;
+    overflow: hidden;
+}
+
+.browser.open {
+    display: flex;
+    animation: browserIn 0.25s ease;
+}
+
+@keyframes browserIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.browserBar {
+    height: 58px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 9px;
+
+    background: #181818;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.browserButton {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+    border: 1px solid #333;
+
+    background: #222;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.browserButton:hover {
+    background: #2b2b2b;
+    color: white;
+}
+
+.browserAddress {
+    flex: 1;
+    height: 40px;
+
+    border-radius: 12px;
+    border: 1px solid #333;
+
+    background: #101010;
+    color: #aaa;
+
+    padding: 0 14px;
+    font-size: 12px;
+    outline: none;
+}
+
+.browser iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: white;
+}
+
+/* =========================
+   FOOTER HINT
+========================= */
+
+.hint {
+    position: fixed;
+    bottom: 19px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 600;
+
+    color: #555;
+    font-size: 9px;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+kbd {
+    display: inline-block;
+
+    margin: 0 3px;
+    padding: 3px 6px;
+
+    border-radius: 5px;
+    border: 1px solid #303030;
+
+    background: #191919;
+    color: #777;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+    .welcome {
+        padding: 14px;
+    }
+
+    .welcomeCard {
+        padding: 23px;
+        border-radius: 24px;
+
+        max-height: calc(100vh - 28px);
+        overflow-y: auto;
+    }
+
+    .welcomeTop {
+        margin-bottom: 21px;
+    }
+
+    .welcomeLogo {
+        width: 54px;
+        height: 54px;
+        flex-basis: 54px;
+        padding: 8px;
+        border-radius: 16px;
+    }
+
+    .welcomeTitle h1 {
+        font-size: 24px;
+    }
+
+    .welcomeIntro h2 {
+        font-size: 18px;
+    }
+
+    .welcomeIntro p {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .welcomeSections {
+        grid-template-columns: 1fr;
+    }
+
+    .welcomeSection {
+        min-height: auto;
+        padding: 14px;
+    }
+
+    .center {
+        width: calc(100% - 28px);
+    }
+
+    .hero {
+        margin-bottom: 16px;
+    }
+
+    .hero .SafeBucketLogo {
+        width: 82px;
+        height: 82px;
+        margin-bottom: 12px;
+        border-radius: 18%;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .search {
+        height: 55px;
+        border-radius: 17px;
+    }
+
+    .go {
+        height: 43px;
+        padding: 0 14px;
+        border-radius: 12px;
+    }
+
+    .block {
+        width: 116px;
+        height: 116px;
+        border-radius: 23px;
+        padding: 7px;
+    }
+
+    .block img {
+        border-radius: 17px;
+    }
+
+    .hint {
+        bottom: 10px;
+        font-size: 7px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="welcome" id="welcome">
+    <div class="welcomeCard">
+
+        <div class="welcomeTop">
+            <div class="welcomeLogo">
+                <img src="Images/SafeBucketLogo.png" alt="Safe Bucket logo">
+            </div>
+
+            <div class="welcomeTitle">
+                <h1>Safe Bucket v5.0.0</h1>
+                <p>A CiphAnon Studios Project</p>
+            </div>
+        </div>
+
+        <div class="welcomeIntro">
+            <h2>Welcome to Safe Bucket.</h2>
+
+            <p>
+                Safe Bucket is a simple web project designed for students who want access to games and more.
+            </p>
+        </div>
+
+        <div class="welcomeSections">
+            <div class="welcomeSection">
+                <div class="welcomeIcon">◉</div>
+
+                <h3>What it is</h3>
+
+                <p>
+                    A simple browser homepage that helps keep unblocked websites unblocked.
+                </p>
+            </div>
+
+            <div class="welcomeSection">
+                <div class="welcomeIcon">◆</div>
+
+                <h3>Made for</h3>
+
+                <p>
+                    Quick access, simple search, gaming, and more.
+                </p>
+            </div>
+        </div>
+
+        <div class="creator">
+            <div class="creatorLeft">
+                <div class="creatorAvatar">C</div>
+
+                <div class="creatorText">
+                    <span>Created by:</span>
+                    <strong>ToonyTime</strong>
+                </div>
+            </div>
+
+            <div class="creatorStudio">
+                CIPHANON<br>
+                STUDIOS
+            </div>
+        </div>
+
+        <button class="enterButton" id="enterSafeBucket">
+            Enter Safe Bucket
+        </button>
+
+        <div class="welcomeRemember">
+            <input type="checkbox" id="dontShowWelcome">
+
+            <label for="dontShowWelcome">
+                Don't show this again
+            </label>
+        </div>
+
+        <div class="welcomeFooter">
+            Built by CiphAnon Studios
+        </div>
+
+    </div>
+</div>
+
+<div class="bg">
+    <div class="grid"></div>
+    <div class="noise"></div>
+</div>
+
+<div class="center">
+    <div class="hero">
+        <img
+            class="SafeBucketLogo"
+            src="Images/SafeBucketLogo.png"
+            alt="Safe Bucket logo"
+        >
+
+        <h1>Safe Bucket</h1>
+
+        <p>
+            Keep Unblocked Sites Safe With Safe Bucket!
+        </p>
+    </div>
+
+    <form class="search" id="searchForm">
+        <div class="searchIcon">⌕</div>
+
+        <input
+            id="searchInput"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Search or enter a website..."
+        >
+
+        <button class="go" type="submit">
+            Go
+        </button>
+    </form>
+</div>
+
+<div class="world" id="world">
+
+    <div class="block" data-url="games.html" data-name="Games">
+        <img src="images/games.jpg" alt="Games">
+        <div class="blockLabel">Games</div>
+    </div>
+
+    <div class="block" data-url="https://flnk.fun" data-name="Movies">
+        <img src="images/movies.jpg" alt="Movies">
+        <div class="blockLabel">Movies</div>
+    </div>
+
+    <div
+        class="block"
+        data-url="https://nick.allys.love/embed.html#https://nowgg.fun/apps/a/19900/b.html"
+        data-name="Roblox"
+    >
+        <img src="Images/Roblox.png" alt="Roblox">
+        <div class="blockLabel">Roblox</div>
+    </div>
+
+    <div
+        class="block"
+        data-url="https://ciphanonstudios.github.io/CiphAnonStudios-v12"
+        data-name="Home"
+    >
+        <img src="Images/CiphAnonStudios.png" alt="Home">
+        <div class="blockLabel">Home</div>
+    </div>
+
+    <div class="block" data-url="https://mkissa.to/" data-name="Anime">
+        <img src="anime.jpeg" alt="Anime">
+        <div class="blockLabel">Anime</div>
+    </div>
+
+    <div
+        class="block"
+        data-url="https://safebucketbypass.github.io/MC/"
+        data-name="Minecraft"
+    >
+        <img src="Images/Minecraft.png" alt="Minecraft">
+        <div class="blockLabel">Minecraft</div>
+    </div>
+
+    <div class="block" data-url="" data-name="Proxy">
+        <img src="Images/Proxy.png" alt="Proxy">
+        <div class="blockLabel">Proxy</div>
+    </div>
+
+</div>
+
+<div class="hint">
+    Drag blocks · <kbd>ESC</kbd> close browser
+</div>
+
+<div class="browser" id="browser">
+    <div class="browserBar">
+
+        <button class="browserButton" id="closeBrowser">
+            ✕
+        </button>
+
+        <button class="browserButton" id="backButton">
+            ←
+        </button>
+
+        <button class="browserButton" id="forwardButton">
+            →
+        </button>
+
+        <input
+            class="browserAddress"
+            id="browserAddress"
+            readonly
+        >
+
+    </div>
+
+    <iframe
+        id="browserFrame"
+        title="CiphAnon Browser"
+    ></iframe>
+</div>
+
+<script>
+const welcome = document.getElementById("welcome");
+const enterSafeBucket = document.getElementById("enterSafeBucket");
+const dontShowWelcome = document.getElementById("dontShowWelcome");
+
+const savedWelcomeState = localStorage.getItem("safeBucketWelcomeHidden");
+
+if (savedWelcomeState === "true") {
+    welcome.classList.add("hidden");
+    dontShowWelcome.checked = true;
+}
+
+enterSafeBucket.addEventListener("click", () => {
+    if (dontShowWelcome.checked) {
+        localStorage.setItem("safeBucketWelcomeHidden", "true");
+    }
+
+    welcome.classList.add("hidden");
+});
+
+const world = document.getElementById("world");
+const blocks = [...document.querySelectorAll(".block")];
+
+const browser = document.getElementById("browser");
+const browserFrame = document.getElementById("browserFrame");
+const browserAddress = document.getElementById("browserAddress");
+
+const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("searchInput");
+
+const closeBrowser = document.getElementById("closeBrowser");
+const backButton = document.getElementById("backButton");
+const forwardButton = document.getElementById("forwardButton");
+
+const PHYSICS = {
+    gravity: 0,
+    air: 0.9994,
+    angularAir: 0.9992,
+    restitution: 0.82,
+    friction: 0.018,
+    collisionIterations: 8,
+    positionPercent: 0.92,
+    minimumSpeed: 0.035,
+    maxSpeed: 1.8,
+    maxAngular: 0.018,
+    cornerSteps: 12
+};
+
+function sub(a, b) {
+    return {
+        x: a.x - b.x,
+        y: a.y - b.y
+    };
+}
+
+function mul(a, n) {
+    return {
+        x: a.x * n,
+        y: a.y * n
+    };
+}
+
+function dot(a, b) {
+    return a.x * b.x + a.y * b.y;
+}
+
+function length(v) {
+    return Math.hypot(v.x, v.y);
+}
+
+function normalize(v) {
+    const size = length(v);
+
+    if (size < 0.000001) {
+        return {
+            x: 1,
+            y: 0
+        };
+    }
+
+    return {
+        x: v.x / size,
+        y: v.y / size
+    };
+}
+
+function rotatePoint(point, angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    return {
+        x: point.x * cos - point.y * sin,
+        y: point.x * sin + point.y * cos
+    };
+}
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function getSize(element) {
+    return {
+        width: element.offsetWidth,
+        height: element.offsetHeight
+    };
+}
+
+function getRadius(element) {
+    const style = getComputedStyle(element);
+    const radius = parseFloat(style.borderTopLeftRadius) || 0;
+    const size = getSize(element);
+
+    return Math.min(radius, size.width / 2, size.height / 2);
+}
+
+const objects = [];
+
+function createObject(element, index) {
+    const size = getSize(element);
+
+    const object = {
+        el: element,
+
+        x: random(
+            30,
+            Math.max(30, innerWidth - size.width - 30)
+        ),
+
+        y: random(
+            30,
+            Math.max(30, innerHeight - size.height - 30)
+        ),
+
+        width: size.width,
+        height: size.height,
+        radius: getRadius(element),
+
+        vx: random(-0.65, 0.65),
+        vy: random(-0.65, 0.65),
+
+        angle: random(-Math.PI, Math.PI),
+        angularVelocity: random(-0.006, 0.006),
+
+        mass: 1,
+        dragging: false,
+        pointerId: null,
+
+        previousX: 0,
+        previousY: 0,
+        moved: false
+    };
+
+    if (index === 0) {
+        object.x = innerWidth * 0.16;
+        object.y = innerHeight * 0.24;
+    }
+
+    if (index === 1) {
+        object.x = innerWidth * 0.68;
+        object.y = innerHeight * 0.25;
+    }
+
+    if (index === 2) {
+        object.x = innerWidth * 0.20;
+        object.y = innerHeight * 0.67;
+    }
+
+    if (index === 3) {
+        object.x = innerWidth * 0.68;
+        object.y = innerHeight * 0.68;
+    }
+
+    object.previousX = object.x;
+    object.previousY = object.y;
+
+    return object;
+}
+
+blocks.forEach((element, index) => {
+    const object = createObject(element, index);
+
+    objects.push(object);
+    setupDragging(object);
+});
+
+function roundedPolygon(object) {
+    const width = object.width;
+    const height = object.height;
+
+    const radius = Math.min(
+        object.radius,
+        width / 2,
+        height / 2
+    );
+
+    const points = [];
+
+    const corners = [
+        {
+            cx: width / 2 - radius,
+            cy: height / 2 - radius,
+            start: 0
+        },
+        {
+            cx: -width / 2 + radius,
+            cy: height / 2 - radius,
+            start: Math.PI / 2
+        },
+        {
+            cx: -width / 2 + radius,
+            cy: -height / 2 + radius,
+            start: Math.PI
+        },
+        {
+            cx: width / 2 - radius,
+            cy: -height / 2 + radius,
+            start: Math.PI * 1.5
+        }
+    ];
+
+    for (const corner of corners) {
+        for (let i = 0; i <= PHYSICS.cornerSteps; i++) {
+            const t = i / PHYSICS.cornerSteps;
+            const angle = corner.start + t * Math.PI / 2;
+
+            const localPoint = {
+                x: corner.cx + Math.cos(angle) * radius,
+                y: corner.cy + Math.sin(angle) * radius
+            };
+
+            const rotatedPoint = rotatePoint(
+                localPoint,
+                object.angle
+            );
+
+            points.push({
+                x: object.x + rotatedPoint.x,
+                y: object.y + rotatedPoint.y
+            });
+        }
+    }
+
+    return points;
+}
+
+function getAxes(polygon) {
+    const axes = [];
+
+    for (let i = 0; i < polygon.length; i++) {
+        const a = polygon[i];
+        const b = polygon[(i + 1) % polygon.length];
+
+        const edge = {
+            x: b.x - a.x,
+            y: b.y - a.y
+        };
+
+        axes.push(
+            normalize({
+                x: -edge.y,
+                y: edge.x
+            })
+        );
+    }
+
+    return axes;
+}
+
+function project(polygon, axis) {
+    let min = Infinity;
+    let max = -Infinity;
+
+    for (const point of polygon) {
+        const value = dot(point, axis);
+
+        min = Math.min(min, value);
+        max = Math.max(max, value);
+    }
+
+    return {
+        min,
+        max
+    };
+}
+
+function polygonCollision(polygonA, polygonB) {
+    const axes = [
+        ...getAxes(polygonA),
+        ...getAxes(polygonB)
+    ];
+
+    let smallestOverlap = Infinity;
+    let smallestAxis = null;
+
+    for (const axis of axes) {
+        const a = project(polygonA, axis);
+        const b = project(polygonB, axis);
+
+        const overlap =
+            Math.min(a.max, b.max) -
+            Math.max(a.min, b.min);
+
+        if (overlap <= 0) {
+            return null;
+        }
+
+        if (overlap < smallestOverlap) {
+            smallestOverlap = overlap;
+            smallestAxis = axis;
+        }
+    }
+
+    return {
+        depth: smallestOverlap,
+        axis: smallestAxis
+    };
+}
+
+function resolveCollision(a, b, collision) {
+    if (!collision) {
+        return;
+    }
+
+    const centerDirection = sub(
+        {
+            x: b.x,
+            y: b.y
+        },
+        {
+            x: a.x,
+            y: a.y
+        }
+    );
+
+    let normal = collision.axis;
+
+    if (dot(centerDirection, normal) < 0) {
+        normal = mul(normal, -1);
+    }
+
+    const slop = 0.01;
+
+    const correctionDepth =
+        Math.max(collision.depth - slop, 0) *
+        PHYSICS.positionPercent;
+
+    if (correctionDepth > 0) {
+        const totalMass = a.mass + b.mass;
+
+        const aShare = b.mass / totalMass;
+        const bShare = a.mass / totalMass;
+
+        if (!a.dragging) {
+            a.x -= normal.x * correctionDepth * aShare;
+            a.y -= normal.y * correctionDepth * aShare;
+        }
+
+        if (!b.dragging) {
+            b.x += normal.x * correctionDepth * bShare;
+            b.y += normal.y * correctionDepth * bShare;
+        }
+    }
+
+    const relativeVelocity = {
+        x: b.vx - a.vx,
+        y: b.vy - a.vy
+    };
+
+    const velocityAlongNormal = dot(
+        relativeVelocity,
+        normal
+    );
+
+    if (velocityAlongNormal > 0) {
+        return;
+    }
+
+    const impulseMagnitude =
+        -(1 + PHYSICS.restitution) *
+        velocityAlongNormal /
+        (1 / a.mass + 1 / b.mass);
+
+    const impulse = mul(
+        normal,
+        impulseMagnitude
+    );
+
+    if (!a.dragging) {
+        a.vx -= impulse.x / a.mass;
+        a.vy -= impulse.y / a.mass;
+    }
+
+    if (!b.dragging) {
+        b.vx += impulse.x / b.mass;
+        b.vy += impulse.y / b.mass;
+    }
+
+    const tangent = {
+        x: -normal.y,
+        y: normal.x
+    };
+
+    const tangentVelocity = dot(
+        relativeVelocity,
+        tangent
+    );
+
+    const frictionImpulse =
+        tangentVelocity * PHYSICS.friction;
+
+    if (!a.dragging) {
+        a.vx += tangent.x * frictionImpulse;
+        a.vy += tangent.y * frictionImpulse;
+    }
+
+    if (!b.dragging) {
+        b.vx -= tangent.x * frictionImpulse;
+        b.vy -= tangent.y * frictionImpulse;
+    }
+}
+
+function solveAllCollisions() {
+    for (
+        let iteration = 0;
+        iteration < PHYSICS.collisionIterations;
+        iteration++
+    ) {
+        let foundCollision = false;
+
+        for (let i = 0; i < objects.length; i++) {
+            const a = objects[i];
+
+            if (a.dragging) {
+                continue;
+            }
+
+            for (let j = i + 1; j < objects.length; j++) {
+                const b = objects[j];
+
+                if (b.dragging) {
+                    continue;
+                }
+
+                const collision = polygonCollision(
+                    roundedPolygon(a),
+                    roundedPolygon(b)
+                );
+
+                if (collision) {
+                    foundCollision = true;
+                    resolveCollision(a, b, collision);
+                }
+            }
+        }
+
+        if (!foundCollision) {
+            break;
+        }
+    }
+}
+
+function keepInside(object) {
+    if (object.dragging) {
+        return;
+    }
+
+    const polygon = roundedPolygon(object);
+
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    for (const point of polygon) {
+        minX = Math.min(minX, point.x);
+        maxX = Math.max(maxX, point.x);
+        minY = Math.min(minY, point.y);
+        maxY = Math.max(maxY, point.y);
+    }
+
+    if (minX < 0) {
+        object.x -= minX;
+
+        if (object.vx < 0) {
+            object.vx = -object.vx * PHYSICS.restitution;
+        }
+    }
+
+    if (maxX > innerWidth) {
+        object.x -= maxX - innerWidth;
+
+        if (object.vx > 0) {
+            object.vx = -object.vx * PHYSICS.restitution;
+        }
+    }
+
+    if (minY < 0) {
+        object.y -= minY;
+
+        if (object.vy < 0) {
+            object.vy = -object.vy * PHYSICS.restitution;
+        }
+    }
+
+    if (maxY > innerHeight) {
+        object.y -= maxY - innerHeight;
+
+        if (object.vy > 0) {
+            object.vy = -object.vy * PHYSICS.restitution;
+        }
+    }
+}
+
+function limitVelocity(object) {
+    const speed = Math.hypot(object.vx, object.vy);
+
+    if (speed > PHYSICS.maxSpeed) {
+        const scale = PHYSICS.maxSpeed / speed;
+
+        object.vx *= scale;
+        object.vy *= scale;
+    }
+
+    if (Math.abs(object.angularVelocity) > PHYSICS.maxAngular) {
+        object.angularVelocity =
+            Math.sign(object.angularVelocity) *
+            PHYSICS.maxAngular;
+    }
+}
+
+function keepFloating(object, time) {
+    if (object.dragging) {
+        return;
+    }
+
+    object.vx +=
+        Math.sin(time * 0.00025 + object.x * 0.002) *
+        0.0015;
+
+    object.vy +=
+        Math.cos(time * 0.00021 + object.y * 0.002) *
+        0.0015;
+
+    const speed = Math.hypot(object.vx, object.vy);
+
+    if (speed < PHYSICS.minimumSpeed) {
+        const angle =
+            Math.atan2(object.y, object.x) +
+            Math.PI / 2;
+
+        object.vx += Math.cos(angle) * PHYSICS.minimumSpeed;
+        object.vy += Math.sin(angle) * PHYSICS.minimumSpeed;
+    }
+}
+
+function setupDragging(object) {
+    const element = object.el;
+
+    let downX = 0;
+    let downY = 0;
+    let startX = 0;
+    let startY = 0;
+
+    element.addEventListener("pointerdown", event => {
+        if (
+            event.button !== undefined &&
+            event.button !== 0
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+
+        object.dragging = true;
+        object.pointerId = event.pointerId;
+
+        element.setPointerCapture(event.pointerId);
+
+        downX = event.clientX;
+        downY = event.clientY;
+
+        startX = object.x;
+        startY = object.y;
+
+        object.previousX = object.x;
+        object.previousY = object.y;
+
+        object.vx = 0;
+        object.vy = 0;
+        object.moved = false;
+
+        element.classList.add("dragging");
+    });
+
+    element.addEventListener("pointermove", event => {
+        if (
+            !object.dragging ||
+            event.pointerId !== object.pointerId
+        ) {
+            return;
+        }
+
+        const dx = event.clientX - downX;
+        const dy = event.clientY - downY;
+
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+            object.moved = true;
+        }
+
+        object.x = startX + dx;
+        object.y = startY + dy;
+
+        const polygon = roundedPolygon(object);
+
+        let minX = Infinity;
+        let maxX = -Infinity;
+        let minY = Infinity;
+        let maxY = -Infinity;
+
+        for (const point of polygon) {
+            minX = Math.min(minX, point.x);
+            maxX = Math.max(maxX, point.x);
+            minY = Math.min(minY, point.y);
+            maxY = Math.max(maxY, point.y);
+        }
+
+        if (minX < 0) {
+            object.x -= minX;
+        }
+
+        if (maxX > innerWidth) {
+            object.x -= maxX - innerWidth;
+        }
+
+        if (minY < 0) {
+            object.y -= minY;
+        }
+
+        if (maxY > innerHeight) {
+            object.y -= maxY - innerHeight;
+        }
+    });
+
+    function release(event) {
+        if (
+            !object.dragging ||
+            event.pointerId !== object.pointerId
+        ) {
+            return;
+        }
+
+        object.dragging = false;
+
+        try {
+            element.releasePointerCapture(event.pointerId);
+        } catch (error) {}
+
+        element.classList.remove("dragging");
+
+        object.vx =
+            (object.x - object.previousX) *
+            0.22;
+
+        object.vy =
+            (object.y - object.previousY) *
+            0.22;
+
+        object.vx = Math.max(
+            -PHYSICS.maxSpeed,
+            Math.min(PHYSICS.maxSpeed, object.vx)
+        );
+
+        object.vy = Math.max(
+            -PHYSICS.maxSpeed,
+            Math.min(PHYSICS.maxSpeed, object.vy)
+        );
+
+        if (!object.moved) {
+            openBrowser(object.el.dataset.url);
+        }
+
+        object.pointerId = null;
+    }
+
+    element.addEventListener("pointerup", release);
+    element.addEventListener("pointercancel", release);
+}
+
+function render(object) {
+    object.el.style.transform = `
+        translate3d(
+            ${object.x - object.width / 2}px,
+            ${object.y - object.height / 2}px,
+            0
+        )
+        rotate(${object.angle}rad)
+    `;
+}
+
+let lastTime = performance.now();
+
+function physicsLoop(time) {
+    let deltaTime = (time - lastTime) / 16.6667;
+
+    lastTime = time;
+    deltaTime = Math.min(deltaTime, 2);
+
+    for (const object of objects) {
+        if (object.dragging) {
+            render(object);
+            continue;
+        }
+
+        object.previousX = object.x;
+        object.previousY = object.y;
+
+        object.vy += PHYSICS.gravity * deltaTime;
+
+        object.vx *= Math.pow(PHYSICS.air, deltaTime);
+        object.vy *= Math.pow(PHYSICS.air, deltaTime);
+
+        object.angularVelocity *= Math.pow(
+            PHYSICS.angularAir,
+            deltaTime
+        );
+
+        object.x += object.vx * deltaTime;
+        object.y += object.vy * deltaTime;
+
+        object.angle +=
+            object.angularVelocity * deltaTime;
+
+        keepFloating(object, time);
+        limitVelocity(object);
+        keepInside(object);
+    }
+
+    solveAllCollisions();
+
+    for (const object of objects) {
+        keepInside(object);
+        render(object);
+    }
+
+    requestAnimationFrame(physicsLoop);
+}
+
+requestAnimationFrame(physicsLoop);
+
+window.addEventListener("resize", () => {
+    for (const object of objects) {
+        object.width = object.el.offsetWidth;
+        object.height = object.el.offsetHeight;
+        object.radius = getRadius(object.el);
+
+        keepInside(object);
+    }
+
+    solveAllCollisions();
+
+    for (const object of objects) {
+        render(object);
+    }
+});
+
+function getDestination(value) {
+    value = value.trim();
+
+    if (!value) {
+        return null;
+    }
+
+    const localPages = [
+        "games.html",
+        "movies.html",
+        "roblox.html",
+        "index.html"
+    ];
+
+    if (localPages.includes(value.toLowerCase())) {
+        return value;
+    }
+
+    if (/^https?:\/\//i.test(value)) {
+        return value;
+    }
+
+    if (
+        /^[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(value)
+    ) {
+        return "https://" + value;
+    }
+
+    return (
+        "https://www.google.com/search?q=" +
+        encodeURIComponent(value)
+    );
+}
+
+function openBrowser(url) {
+    if (!url) {
+        return;
+    }
+
+    browserFrame.src = url;
+    browserAddress.value = url;
+    browser.classList.add("open");
+}
+
+function closeBrowserWindow() {
+    browser.classList.remove("open");
+    browserFrame.src = "about:blank";
+    browserAddress.value = "";
+}
+
+closeBrowser.addEventListener(
+    "click",
+    closeBrowserWindow
+);
+
+searchForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const destination = getDestination(
+        searchInput.value
+    );
+
+    if (destination) {
+        openBrowser(destination);
+        searchInput.blur();
+    }
+});
+
+searchInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        searchForm.requestSubmit();
+    }
+});
+
+document.addEventListener("keydown", event => {
+    if (
+        event.key === "Escape" &&
+        browser.classList.contains("open")
+    ) {
+        closeBrowserWindow();
+    }
+});
+
+backButton.addEventListener("click", () => {
+    try {
+        browserFrame.contentWindow.history.back();
+    } catch (error) {}
+});
+
+forwardButton.addEventListener("click", () => {
+    try {
+        browserFrame.contentWindow.history.forward();
+    } catch (error) {}
+});
+
+for (const object of objects) {
+    render(object);
+}
+</script>
+
+</body>
+</html>
