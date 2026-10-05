@@ -36,6 +36,584 @@ body{
     position:relative;
 }
 
+/* ============================================================
+   WELCOME SCREEN
+============================================================ */
+
+.welcome{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:#0009;
+    backdrop-filter:blur(18px);
+
+    opacity:1;
+    visibility:visible;
+
+    transition:
+        opacity .45s ease,
+        visibility .45s ease;
+}
+
+.welcome.hidden{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+}
+
+/* ADDED: subtle animated glow */
+
+.welcome::before{
+    content:"";
+
+    position:absolute;
+
+    width:520px;
+    height:520px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #ffffff0b 0%,
+            #ffffff04 35%,
+            transparent 70%
+        );
+
+    filter:blur(20px);
+
+    pointer-events:none;
+
+    animation:
+        welcomeGlow 6s ease-in-out infinite;
+}
+
+@keyframes welcomeGlow{
+
+    0%,100%{
+        transform:scale(.88);
+        opacity:.55;
+    }
+
+    50%{
+        transform:scale(1.08);
+        opacity:1;
+    }
+}
+
+.welcomeCard{
+    position:relative;
+
+    width:min(560px,100%);
+
+    padding:34px;
+
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1d1d1d,
+            #121212
+        );
+
+    border:1px solid #383838;
+
+    box-shadow:
+        0 40px 120px #000,
+        inset 0 1px 0 #ffffff12;
+
+    transform:translateY(0) scale(1);
+
+    animation:
+        welcomeIn .55s cubic-bezier(.2,.8,.2,1);
+
+    overflow:hidden;
+}
+
+/* ADDED: card shine */
+
+.welcomeCard::before{
+    content:"";
+
+    position:absolute;
+
+    top:-100%;
+    left:-60%;
+
+    width:45%;
+    height:300%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ffffff05,
+            transparent
+        );
+
+    transform:rotate(20deg);
+
+    pointer-events:none;
+
+    animation:
+        welcomeShine 8s ease-in-out infinite;
+}
+
+@keyframes welcomeShine{
+
+    0%,55%,100%{
+        left:-70%;
+    }
+
+    75%{
+        left:130%;
+    }
+}
+
+@keyframes welcomeIn{
+
+    from{
+        opacity:0;
+        transform:
+            translateY(25px)
+            scale(.96);
+    }
+
+    to{
+        opacity:1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+.welcomeTop{
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    margin-bottom:28px;
+}
+
+.welcomeLogo{
+    width:64px;
+    height:64px;
+
+    flex-shrink:0;
+
+    border-radius:19px;
+
+    display:grid;
+    place-items:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #303030,
+            #171717
+        );
+
+    border:1px solid #454545;
+
+    box-shadow:
+        0 12px 30px #0008,
+        inset 0 1px 0 #ffffff18;
+
+    font-size:28px;
+    font-weight:900;
+
+    /* ADDED */
+    animation:
+        welcomeLogoFloat 4s ease-in-out infinite;
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+@keyframes welcomeLogoFloat{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-4px);
+    }
+}
+
+/* ADDED */
+
+.welcomeLogo:hover{
+    transform:translateY(-4px) scale(1.04);
+
+    border-color:#555;
+
+    box-shadow:
+        0 16px 35px #000a,
+        inset 0 1px 0 #ffffff22;
+}
+
+.welcomeTitle{
+    min-width:0;
+}
+
+.welcomeTitle h1{
+    font-size:28px;
+    line-height:1;
+
+    letter-spacing:-1.4px;
+    font-weight:850;
+}
+
+.welcomeTitle p{
+    margin-top:7px;
+
+    color:#777;
+
+    font-size:11px;
+    letter-spacing:.5px;
+}
+
+.welcomeIntro{
+    margin-bottom:25px;
+}
+
+.welcomeIntro h2{
+    font-size:20px;
+    letter-spacing:-.5px;
+    margin-bottom:9px;
+}
+
+.welcomeIntro p{
+    color:#8c8c8c;
+
+    font-size:13px;
+    line-height:1.7;
+}
+
+.welcomeSections{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+
+    gap:10px;
+
+    margin-bottom:26px;
+}
+
+.welcomeSection{
+    padding:16px;
+
+    min-height:125px;
+
+    border-radius:18px;
+
+    background:#181818;
+
+    border:1px solid #2e2e2e;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff08;
+
+    /* ADDED */
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+}
+
+/* ADDED */
+
+.welcomeSection:hover{
+    transform:translateY(-4px);
+
+    background:#1b1b1b;
+
+    border-color:#3b3b3b;
+
+    box-shadow:
+        0 12px 25px #0006,
+        inset 0 1px 0 #ffffff0c;
+}
+
+.welcomeIcon{
+    width:34px;
+    height:34px;
+
+    display:grid;
+    place-items:center;
+
+    margin-bottom:12px;
+
+    border-radius:11px;
+
+    background:#242424;
+
+    border:1px solid #383838;
+
+    color:#ddd;
+
+    font-size:15px;
+
+    /* ADDED */
+
+    transition:
+        transform .25s ease,
+        background .25s ease;
+}
+
+/* ADDED */
+
+.welcomeSection:hover .welcomeIcon{
+    transform:scale(1.08);
+
+    background:#292929;
+}
+
+.welcomeSection h3{
+    font-size:12px;
+
+    text-transform:uppercase;
+    letter-spacing:1px;
+
+    margin-bottom:7px;
+}
+
+.welcomeSection p{
+    color:#777;
+
+    font-size:10px;
+    line-height:1.55;
+}
+
+.creator{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:14px 15px;
+
+    margin-bottom:16px;
+
+    border-radius:16px;
+
+    background:#141414;
+
+    border:1px solid #292929;
+
+    /* ADDED */
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+/* ADDED */
+
+.creator:hover{
+    transform:translateY(-2px);
+
+    background:#171717;
+
+    border-color:#353535;
+}
+
+.creatorLeft{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.creatorAvatar{
+    width:38px;
+    height:38px;
+
+    border-radius:12px;
+
+    display:grid;
+    place-items:center;
+
+    background:#252525;
+
+    border:1px solid #3a3a3a;
+
+    font-size:16px;
+    font-weight:900;
+
+    /* ADDED */
+
+    transition:
+        transform .25s ease,
+        background .25s ease;
+}
+
+/* ADDED */
+
+.creator:hover .creatorAvatar{
+    transform:rotate(-3deg) scale(1.05);
+
+    background:#292929;
+}
+
+.creatorText span{
+    display:block;
+
+    color:#666;
+
+    font-size:8px;
+
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+
+    margin-bottom:3px;
+}
+
+.creatorText strong{
+    font-size:12px;
+    color:#eee;
+}
+
+.creatorStudio{
+    color:#666;
+
+    font-size:9px;
+
+    text-align:right;
+
+    letter-spacing:.5px;
+}
+
+.enterButton{
+    width:100%;
+    height:52px;
+
+    border:1px solid #444;
+
+    border-radius:15px;
+
+    background:#eee;
+
+    color:#111;
+
+    font-size:12px;
+    font-weight:850;
+
+    letter-spacing:.3px;
+
+    cursor:pointer;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+.enterButton:hover{
+    background:#fff;
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 12px 30px #0008;
+}
+
+.enterButton:active{
+    transform:scale(.98);
+}
+
+/* ADDED: don't show again */
+
+.welcomeRemember{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    margin-top:13px;
+
+    color:#505050;
+
+    font-size:8px;
+
+    letter-spacing:.5px;
+
+    user-select:none;
+}
+
+.welcomeRemember input{
+    appearance:none;
+
+    width:14px;
+    height:14px;
+
+    border-radius:4px;
+
+    border:1px solid #383838;
+
+    background:#151515;
+
+    cursor:pointer;
+
+    position:relative;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.welcomeRemember input:checked{
+    background:#ddd;
+
+    border-color:#ddd;
+}
+
+.welcomeRemember input:checked::after{
+    content:"✓";
+
+    position:absolute;
+
+    left:3px;
+    top:-1px;
+
+    color:#111;
+
+    font-size:10px;
+
+    font-weight:900;
+}
+
+.welcomeRemember label{
+    cursor:pointer;
+}
+
+.welcomeFooter{
+    text-align:center;
+
+    color:#505050;
+
+    font-size:8px;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    margin-top:13px;
+}
+
 /* =========================
    BACKGROUND
 ========================= */
@@ -511,6 +1089,56 @@ kbd{
 
 @media(max-width:700px){
 
+    .welcome{
+        padding:14px;
+    }
+
+    .welcomeCard{
+        padding:23px;
+
+        border-radius:24px;
+
+        max-height:calc(100vh - 28px);
+        overflow-y:auto;
+    }
+
+    .welcomeTop{
+        margin-bottom:21px;
+    }
+
+    .welcomeLogo{
+        width:54px;
+        height:54px;
+
+        border-radius:16px;
+    }
+
+    .welcomeTitle h1{
+        font-size:24px;
+    }
+
+    .welcomeIntro h2{
+        font-size:18px;
+    }
+
+    .welcomeIntro p{
+        font-size:12px;
+        line-height:1.6;
+    }
+
+    .welcomeSections{
+        grid-template-columns:1fr;
+    }
+
+    .welcomeSection{
+        min-height:auto;
+        padding:14px;
+    }
+
+    .welcomeIcon{
+        margin-bottom:9px;
+    }
+
     .center{
         width:calc(100% - 28px);
     }
@@ -557,10 +1185,143 @@ kbd{
 
 <body>
 
+<!-- ============================================================
+     WELCOME SCREEN
+============================================================ -->
+
+<div class="welcome" id="welcome">
+
+    <div class="welcomeCard">
+
+        <div class="welcomeTop">
+
+            <div class="welcomeLogo">
+                SB
+            </div>
+
+            <div class="welcomeTitle">
+
+                <h1>Safe Bucket</h1>
+
+                <p>
+                    A CiphAnon Studios Project
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="welcomeIntro">
+
+            <h2>Welcome to Safe Bucket.</h2>
+
+            <p>
+                Safe Bucket is A Simple WebProject designed for students who want acess to Games and more!
+            </p>
+
+        </div>
+
+
+        <div class="welcomeSections">
+
+            <div class="welcomeSection">
+
+                <div class="welcomeIcon">
+                    ◉
+                </div>
+
+                <h3>What it is</h3>
+
+                <p>
+                    A Simple Browser Homepage that helps keep unblocked websites unblocked.
+                </p>
+
+            </div>
+
+
+            <div class="welcomeSection">
+
+                <div class="welcomeIcon">
+                    ◆
+                </div>
+
+                <h3>Made for</h3>
+
+                <p>
+                    Quick access, simple search, Gaming, and More.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="creator">
+
+            <div class="creatorLeft">
+
+                <div class="creatorAvatar">
+                    C
+                </div>
+
+                <div class="creatorText">
+
+                    <span>Created by:</span>
+
+                    <strong>ToonyTime</strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="creatorStudio">
+                CIPHANON<br>
+                STUDIOS
+            </div>
+
+        </div>
+
+
+        <button
+            class="enterButton"
+            id="enterSafeBucket"
+        >
+            Enter Safe Bucket
+        </button>
+
+
+        <!-- ADDED -->
+
+        <div class="welcomeRemember">
+
+            <input
+                type="checkbox"
+                id="dontShowWelcome"
+            >
+
+            <label for="dontShowWelcome">
+                Don't show this again
+            </label>
+
+        </div>
+
+
+        <div class="welcomeFooter">
+            Built by CiphAnon Studios
+        </div>
+
+    </div>
+
+</div>
+
+
 <div class="bg">
     <div class="grid"></div>
     <div class="noise"></div>
 </div>
+
 
 <!-- CENTER -->
 
@@ -571,7 +1332,7 @@ kbd{
         <h1>Safe Bucket</h1>
 
         <p>
-            Keep Unblocked Sites Unblocked With Safe Bucket!
+            Enter a Website that hasent been blocked yet!
         </p>
 
     </div>
@@ -643,7 +1404,7 @@ kbd{
 
     <div
         class="block"
-        data-url="roblox.html"
+        data-url="https://schoollearning-tabs.lervs.ro/"
         data-name="Roblox"
     >
 
@@ -729,8 +1490,85 @@ kbd{
 <script>
 
 /* ============================================================
+   WELCOME SCREEN
+============================================================ */
+
+const welcome =
+    document.getElementById("welcome");
+
+const enterSafeBucket =
+    document.getElementById("enterSafeBucket");
+
+
+/* ADDED */
+
+const dontShowWelcome =
+    document.getElementById(
+        "dontShowWelcome"
+    );
+
+
+/* ADDED:
+   Skip the welcome screen if the user
+   previously selected "Don't show this again".
+*/
+
+if(
+    localStorage.getItem(
+        "safeBucketWelcomeHidden"
+    ) === "true"
+){
+
+    welcome.classList.add(
+        "hidden"
+    );
+
+}
+
+
+/* ADDED:
+   Restore checkbox state.
+*/
+
+if(
+    localStorage.getItem(
+        "safeBucketWelcomeHidden"
+    ) === "true"
+){
+
+    dontShowWelcome.checked=true;
+
+}
+
+
+enterSafeBucket.addEventListener(
+    "click",
+    ()=>{
+
+        /* ADDED */
+
+        if(
+            dontShowWelcome.checked
+        ){
+
+            localStorage.setItem(
+                "safeBucketWelcomeHidden",
+                "true"
+            );
+
+        }
+
+
+        welcome.classList.add(
+            "hidden"
+        );
+
+    }
+);
+
+
+/* ============================================================
    CIPHANON SAFE BROWSER
-   SOLID ROUNDED-BLOCK PHYSICS
 ============================================================ */
 
 const world =
@@ -1316,10 +2154,6 @@ function resolveCollision(
     }
 
 
-    /*
-        PUSH THE BLOCKS COMPLETELY APART
-    */
-
     const slop=0.01;
 
     const correctionDepth=
@@ -1376,10 +2210,6 @@ function resolveCollision(
         }
     }
 
-
-    /*
-        BOUNCE
-    */
 
     const relativeVelocity={
 
@@ -1445,10 +2275,6 @@ function resolveCollision(
             impulse.y/b.mass;
     }
 
-
-    /*
-        FRICTION
-    */
 
     const tangent={
 
@@ -2164,16 +2990,8 @@ function physicsLoop(time){
     }
 
 
-    /*
-        HARD SOLID COLLISION PASS
-    */
-
     solveAllCollisions();
 
-
-    /*
-        Final edge correction
-    */
 
     for(
         const obj of objects
