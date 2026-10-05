@@ -136,7 +136,7 @@ body{
     animation:
         welcomeIn .55s cubic-bezier(.2,.8,.2,1);
 
-    overflow:hidden;
+    overflow:visible;
 }
 
 /* ADDED: card shine */
@@ -1199,6 +1199,22 @@ kbd{
     object-position: center;
 }
 
+.bannerBlock{
+position:absolute;
+width:300px;
+height:80px;
+top: ;
+right: -90px;
+margin-bottom:20px;
+background:white;
+border-radius:50px 50px 25px 25px;
+overflow:hidden;
+
+transform: rotate(50deg);
+
+
+}
+
 </style>
 </head>
 
@@ -1211,7 +1227,7 @@ kbd{
 <div class="welcome" id="welcome">
 
     <div class="welcomeCard">
-
+        <div class="bannerBlock"></div>
         <div class="welcomeTop">
 
             <div class="welcomeLogo">
