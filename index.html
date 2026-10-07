@@ -1583,6 +1583,125 @@ font-size: 8px;
 
 }
 
+/* =========================
+   RANDOM AD SYSTEM
+========================= */
+
+.randomAd {
+    position: fixed;
+    left: 50%;
+    bottom: 25px;
+    z-index: 9500;
+
+    width: min(350px, calc(100% - 30px));
+    padding: 20px;
+
+    transform: translateX(-50%) translateY(35px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    border: 1px solid #555;
+    border-radius: 20px;
+
+    background:
+        linear-gradient(145deg, #292929, #111);
+
+    color: #fff;
+
+    box-shadow:
+        0 20px 70px #000c,
+        inset 0 1px 0 #ffffff15;
+
+    transition:
+        opacity .35s ease,
+        transform .35s ease,
+        visibility .35s ease;
+}
+
+.randomAd.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.randomAd h3 {
+    margin: 8px 0;
+
+    color: #fff;
+    font-size: 20px;
+    letter-spacing: -.5px;
+}
+
+.randomAd p {
+    margin-bottom: 15px;
+
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.adLabel {
+    color: #888;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.closeRandomAd {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+
+    width: 28px;
+    height: 28px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+    color: #aaa;
+
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.closeRandomAd:hover {
+    background: #ffffff12;
+    color: #fff;
+}
+
+.randomAdButton {
+    padding: 10px 15px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: #fff;
+    color: #111;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+}
+
+.randomAdButton:hover {
+    background: #ddd;
+    transform: translateY(-2px);
+}
+
+@media(max-width:700px) {
+    .randomAd {
+        bottom: 15px;
+        padding: 17px;
+    }
+}
+
+
 </style>
 </head>
 
@@ -1800,6 +1919,21 @@ font-size: 8px;
     </form>
 
 </div>
+<!-- random ads-->
+<div class="randomAd" id="randomAd">
+    <button class="closeRandomAd" id="closeRandomAd">×</button>
+
+    <div class="adLabel">Sponsored</div>
+
+    <h3 id="randomAdTitle"></h3>
+
+    <p id="randomAdText"></p>
+
+    <button class="randomAdButton" id="randomAdButton">
+        Open
+    </button>
+</div>
+
 <!-- date/time -->
 <div class="dateTime" id="dateTime"> <strong id="currentTime">10:44:08 AM</strong> <span id="currentDate">October 7, 2026</span> </div>
 <!-- info button -->
@@ -3881,6 +4015,148 @@ currentDate.textContent = now.toLocaleDateString(undefined, {
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
+/* random ads */
+/* ============================================================
+   RANDOM MULTI-AD SYSTEM
+============================================================ */
+
+const randomAd = document.getElementById("randomAd");
+const closeRandomAd = document.getElementById("closeRandomAd");
+const randomAdButton = document.getElementById("randomAdButton");
+const randomAdTitle = document.getElementById("randomAdTitle");
+const randomAdText = document.getElementById("randomAdText");
+
+const adList = [
+    {
+        title: "Try Safe Bucket",
+        text: "Quick access to games, tools, websites, and more.",
+        button: "Open Safe Bucket",
+        url: "index.html"
+    },
+
+    {
+        title: "Play Some Games",
+        text: "Find games and other fun websites in one place.",
+        button: "Open Games",
+        url: "games.html"
+    },
+
+    {
+        title: "Visit CiphAnon Studios",
+        text: "Explore more projects created by CiphAnon Studios.",
+        button: "Visit Studio",
+        url: "https://ciphanonstudios.github.io/CiphAnonStudios-v12"
+    },
+
+    {
+        title: "Check Out Minecraft",
+        text: "Open the Minecraft section and start playing.",
+        button: "Open Minecraft",
+        url: "https://safebucketbypass.github.io/MC/"
+    },
+
+    {
+        title: "Explore Anime",
+        text: "Find anime content through Safe Bucket.",
+        button: "Open Anime",
+        url: "https://mkissa.to/"
+    }
+];
+
+let currentAd = null;
+let adTimer = null;
+let adHideTimer = null;
+let lastAdIndex = -1;
+
+function getRandomAd() {
+    let index;
+
+    do {
+        index = Math.floor(Math.random() * adList.length);
+    } while (
+        adList.length > 1 &&
+        index === lastAdIndex
+    );
+
+    lastAdIndex = index;
+    return adList[index];
+}
+
+function getRandomDelay() {
+    /*
+       Random time between 20 and 60 seconds.
+       Change these numbers if needed.
+    */
+
+    const minimumDelay = 20000;
+    const maximumDelay = 60000;
+
+    return Math.floor(
+        Math.random() *
+        (maximumDelay - minimumDelay) +
+        minimumDelay
+    );
+}
+
+function hideRandomAd() {
+    randomAd.classList.remove("show");
+
+    if (adHideTimer) {
+        clearTimeout(adHideTimer);
+        adHideTimer = null;
+    }
+}
+
+function showRandomAd() {
+    currentAd = getRandomAd();
+
+    randomAdTitle.textContent = currentAd.title;
+    randomAdText.textContent = currentAd.text;
+    randomAdButton.textContent = currentAd.button;
+
+    randomAd.classList.add("show");
+
+    if (adHideTimer) {
+        clearTimeout(adHideTimer);
+    }
+
+    adHideTimer = setTimeout(() => {
+        hideRandomAd();
+    }, 12000);
+}
+
+function scheduleRandomAd() {
+    if (adTimer) {
+        clearTimeout(adTimer);
+    }
+
+    const randomDelay = getRandomDelay();
+
+    adTimer = setTimeout(() => {
+        showRandomAd();
+        scheduleRandomAd();
+    }, randomDelay);
+}
+
+closeRandomAd.addEventListener("click", () => {
+    hideRandomAd();
+    scheduleRandomAd();
+});
+
+randomAdButton.addEventListener("click", () => {
+    if (currentAd && currentAd.url) {
+        openBrowser(currentAd.url);
+    }
+
+    hideRandomAd();
+    scheduleRandomAd();
+});
+
+/*
+   Start the random ad timer.
+*/
+scheduleRandomAd();
+
 /* ============================================================
    INITIAL RENDER
 ============================================================ */
