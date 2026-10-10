@@ -1700,6 +1700,252 @@ font-size: 8px;
 }
 
 
+/* ==============================
+   CIPHANON CONTROL PANEL
+============================== */
+
+#controlPanelToggle {
+    min-width: 40px;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #555;
+    border-radius: 9px;
+    background: #111;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+}
+
+#controlPanelToggle:hover {
+    background: #252525;
+    border-color: #fff;
+}
+
+#controlPanel {
+    position: absolute;
+    top: 66px;
+    right: 12px;
+    z-index: 9999;
+    width: min(320px, calc(100% - 24px));
+    padding: 16px;
+    background: #080808;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 14px;
+    box-shadow: 0 12px 40px #000b;
+    font-family: Inter, Arial, sans-serif;
+    display: none;
+}
+
+#controlPanel.visible {
+    display: block;
+    animation: controlPanelIn .18s ease-out;
+}
+
+@keyframes controlPanelIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.controlHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.controlHeader h3 {
+    margin: 0;
+    font-size: 16px;
+    letter-spacing: .3px;
+}
+
+#controlPanelClose {
+    background: transparent;
+    color: #aaa;
+    border: 1px solid #444;
+    border-radius: 7px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#controlPanelClose:hover {
+    color: white;
+    border-color: white;
+}
+
+.controlStatus {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    margin-bottom: 14px;
+    background: #111;
+    border: 1px solid #292929;
+    border-radius: 9px;
+    font-size: 12px;
+    color: #bbb;
+}
+
+.controlStatusDot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #777;
+}
+
+.controlStatusDot.active {
+    background: #7dff9a;
+    box-shadow: 0 0 10px #7dff9a77;
+}
+
+.controlSection {
+    margin-top: 14px;
+}
+
+.controlSectionTitle {
+    margin-bottom: 8px;
+    color: #999;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.controlGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+}
+
+.controlKey,
+.controlAction {
+    min-height: 42px;
+    padding: 9px 6px;
+    color: #fff;
+    background: #151515;
+    border: 1px solid #393939;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.controlKey:hover,
+.controlAction:hover {
+    background: #252525;
+    border-color: #aaa;
+}
+
+.controlKey:active,
+.controlAction:active {
+    background: #333;
+}
+
+.controlKey:disabled,
+.controlAction:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.controlWide {
+    grid-column: span 3;
+}
+
+.controlInputRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#autoClickInterval {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    background: #111;
+    color: white;
+    border: 1px solid #393939;
+    border-radius: 8px;
+    outline: none;
+}
+
+#autoClickInterval:focus {
+    border-color: white;
+}
+
+#autoClickStart {
+    background: #f3f3f3;
+    color: #080808;
+    border-color: white;
+    white-space: nowrap;
+}
+
+#autoClickStart.running {
+    background: #222;
+    color: white;
+    border-color: #777;
+}
+
+.controlStats {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 0 2px;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.controlStats strong {
+    color: white;
+    font-variant-numeric: tabular-nums;
+}
+
+.controlNotice {
+    margin-top: 13px;
+    padding: 10px;
+    background: #101010;
+    border-left: 2px solid #777;
+    color: #999;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.controlShortcuts {
+    margin-top: 12px;
+    color: #777;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.controlShortcuts kbd {
+    padding: 2px 5px;
+    background: #191919;
+    border: 1px solid #383838;
+    border-radius: 4px;
+    color: #ddd;
+}
+
+@media (max-width: 480px) {
+    #controlPanel {
+        top: 62px;
+        right: 8px;
+        width: min(300px, calc(100% - 16px));
+    }
+}
+
 </style>
 </head>
 
@@ -2141,6 +2387,16 @@ font-size: 8px;
             →
         </button>
 
+<button
+    class="browserButton"
+    id="controlPanelToggle"
+    type="button"
+    title="Open controls"
+    aria-label="Open control panel"
+>
+    CTRL
+</button>
+
         <input
             class="browserAddress"
             id="browserAddress"
@@ -2148,6 +2404,85 @@ font-size: 8px;
         >
 
     </div>
+
+<!-- CIPHANON CONTROL PANEL -->
+<div id="controlPanel" aria-label="Game controls">
+
+    <div class="controlHeader">
+        <h3>Control Center</h3>
+        <button id="controlPanelClose" type="button" aria-label="Close controls">
+            ✕
+        </button>
+    </div>
+
+    <div class="controlStatus">
+        <span class="controlStatusDot" id="controlStatusDot"></span>
+        <span id="controlStatusText">Controls ready</span>
+    </div>
+
+    <div class="controlSection">
+        <div class="controlSectionTitle">Keyboard</div>
+
+        <div class="controlGrid">
+            <button class="controlKey" data-key="w" type="button">W · Forward</button>
+            <button class="controlKey" data-key="a" type="button">A · Left</button>
+            <button class="controlKey" data-key="d" type="button">D · Right</button>
+
+            <button class="controlKey" data-key="s" type="button">S · Back</button>
+            <button class="controlKey" data-key=" " type="button">SPACE</button>
+            <button class="controlKey" data-key="Shift" type="button">SHIFT</button>
+
+            <button class="controlAction controlWide" id="releaseAllKeys" type="button">
+                Release All Keys
+            </button>
+        </div>
+    </div>
+
+    <div class="controlSection">
+        <div class="controlSectionTitle">Auto Clicker</div>
+
+        <div class="controlInputRow">
+            <input
+                id="autoClickInterval"
+                type="number"
+                min="50"
+                max="10000"
+                step="50"
+                value="500"
+                aria-label="Click interval in milliseconds"
+            >
+
+            <button id="autoClickStart" class="controlAction" type="button">
+                Start
+            </button>
+        </div>
+
+        <div class="controlStats">
+            <span>Interval: <strong id="controlIntervalLabel">500 ms</strong></span>
+            <span>Clicks: <strong id="controlClickCount">0</strong></span>
+        </div>
+
+        <div class="controlGrid" style="margin-top:8px">
+            <button id="singleClickButton" class="controlAction controlWide" type="button">
+                Send One Click
+            </button>
+            <button id="resetClickCount" class="controlAction controlWide" type="button">
+                Reset Counter
+            </button>
+        </div>
+    </div>
+
+    <div class="controlNotice">
+        These are best-effort controls for compatible pages. External games may ignore
+        simulated input or block access from the browser.
+    </div>
+
+    <div class="controlShortcuts">
+        <kbd>CTRL</kbd> Open/close this panel<br>
+        <kbd>ESC</kbd> Close the panel or browser
+    </div>
+
+</div>
 
     <iframe
         id="browserFrame"
@@ -4154,6 +4489,305 @@ randomAdButton.addEventListener("click", () => {
    Start the random ad timer.
 */
 scheduleRandomAd();
+
+/* =====================================
+   CIPHANON CONTROL CENTER
+===================================== */
+(() => {
+    const panel = document.getElementById("controlPanel");
+    const toggle = document.getElementById("controlPanelToggle");
+    const closeButton = document.getElementById("controlPanelClose");
+    const statusText = document.getElementById("controlStatusText");
+    const statusDot = document.getElementById("controlStatusDot");
+
+    const intervalInput = document.getElementById("autoClickInterval");
+    const intervalLabel = document.getElementById("controlIntervalLabel");
+    const startButton = document.getElementById("autoClickStart");
+    const clickCountLabel = document.getElementById("controlClickCount");
+    const singleClickButton = document.getElementById("singleClickButton");
+    const resetButton = document.getElementById("resetClickCount");
+    const releaseButton = document.getElementById("releaseAllKeys");
+
+    const frame = document.getElementById("browserFrame");
+
+    if (
+        !panel || !toggle || !closeButton ||
+        !intervalInput || !startButton || !frame
+    ) {
+        console.warn("CiphAnon Control Center: Required browser elements are missing.");
+        return;
+    }
+
+    let clickTimer = null;
+    let clickCount = 0;
+    let running = false;
+    const heldKeys = new Set();
+
+    function setStatus(message, active = false) {
+        statusText.textContent = message;
+        statusDot.classList.toggle("active", active);
+    }
+
+    function setPanelOpen(open) {
+        panel.classList.toggle("visible", open);
+        toggle.setAttribute("aria-expanded", String(open));
+
+        if (!open) {
+            stopAutoClicker();
+            releaseAllKeys();
+        }
+    }
+
+    function getTargetWindow() {
+        try {
+            // Access is permitted only when the iframe is same-origin.
+            const target = frame.contentWindow;
+            void target.document;
+            return target;
+        } catch {
+            return null;
+        }
+    }
+
+    function sendKey(key, type) {
+        const target = getTargetWindow();
+
+        if (!target) {
+            setStatus("Page blocks keyboard access");
+            return false;
+        }
+
+        try {
+            const keyMap = {
+                " ": { key: " ", code: "Space", keyCode: 32 },
+                "Shift": { key: "Shift", code: "ShiftLeft", keyCode: 16 },
+                "w": { key: "w", code: "KeyW", keyCode: 87 },
+                "a": { key: "a", code: "KeyA", keyCode: 65 },
+                "s": { key: "s", code: "KeyS", keyCode: 83 },
+                "d": { key: "d", code: "KeyD", keyCode: 68 }
+            };
+
+            const info = keyMap[key] || {
+                key,
+                code: "",
+                keyCode: 0
+            };
+
+            const event = new target.KeyboardEvent(type, {
+                key: info.key,
+                code: info.code,
+                bubbles: true,
+                cancelable: true
+            });
+
+            // Legacy properties are read-only in some browsers.
+            // Many games ignore synthetic keyboard events entirely.
+            target.document.dispatchEvent(event);
+            target.document.activeElement?.dispatchEvent(event);
+
+            setStatus("Input sent; game support varies", true);
+            return true;
+        } catch {
+            setStatus("Could not send keyboard input");
+            return false;
+        }
+    }
+
+    function pressKey(key) {
+        if (heldKeys.has(key)) return;
+
+        heldKeys.add(key);
+        sendKey(key, "keydown");
+    }
+
+    function releaseKey(key) {
+        if (!heldKeys.has(key)) return;
+
+        heldKeys.delete(key);
+        sendKey(key, "keyup");
+    }
+
+    function releaseAllKeys() {
+        for (const key of [...heldKeys]) {
+            releaseKey(key);
+        }
+
+        heldKeys.clear();
+        setStatus("Keys released");
+    }
+
+    function stopAutoClicker() {
+        if (clickTimer !== null) {
+            clearInterval(clickTimer);
+            clickTimer = null;
+        }
+
+        running = false;
+        startButton.textContent = "Start";
+        startButton.classList.remove("running");
+    }
+
+    function sendClick() {
+        const target = getTargetWindow();
+
+        if (!target) {
+            stopAutoClicker();
+            setStatus("Page blocks click access");
+            return false;
+        }
+
+        try {
+            const doc = target.document;
+            const element = doc.activeElement;
+
+            if (!element || element === doc.body || element === doc.documentElement) {
+                setStatus("Tap inside the page first");
+                return false;
+            }
+
+            element.dispatchEvent(new target.MouseEvent("mousedown", {
+                bubbles: true,
+                cancelable: true,
+                view: target,
+                button: 0
+            }));
+
+            element.dispatchEvent(new target.MouseEvent("mouseup", {
+                bubbles: true,
+                cancelable: true,
+                view: target,
+                button: 0
+            }));
+
+            element.dispatchEvent(new target.MouseEvent("click", {
+                bubbles: true,
+                cancelable: true,
+                view: target,
+                button: 0
+            }));
+
+            clickCount++;
+            clickCountLabel.textContent = String(clickCount);
+            setStatus("Click event sent", true);
+            return true;
+        } catch {
+            setStatus("Could not send click");
+            return false;
+        }
+    }
+
+    function startAutoClicker() {
+        const interval = Number(intervalInput.value);
+
+        if (!Number.isFinite(interval) || interval < 50 || interval > 10000) {
+            setStatus("Choose 50–10000 milliseconds");
+            intervalInput.value = "500";
+            intervalLabel.textContent = "500 ms";
+            return;
+        }
+
+        stopAutoClicker();
+
+        intervalLabel.textContent = `${interval} ms`;
+        running = true;
+        startButton.textContent = "Stop";
+        startButton.classList.add("running");
+        setStatus("Auto clicker running", true);
+
+        clickTimer = setInterval(() => {
+            if (!sendClick()) {
+                stopAutoClicker();
+            }
+        }, interval);
+    }
+
+    toggle.addEventListener("click", () => {
+        setPanelOpen(!panel.classList.contains("visible"));
+    });
+
+    closeButton.addEventListener("click", () => {
+        setPanelOpen(false);
+    });
+
+    document.querySelectorAll("#controlPanel [data-key]").forEach(button => {
+        const key = button.dataset.key;
+
+        // Use click/touch instead of holding a physical key.
+        button.addEventListener("pointerdown", event => {
+            event.preventDefault();
+            pressKey(key);
+        });
+
+        const release = () => releaseKey(key);
+
+        button.addEventListener("pointerup", release);
+        button.addEventListener("pointercancel", release);
+        button.addEventListener("lostpointercapture", release);
+    });
+
+    releaseButton.addEventListener("click", releaseAllKeys);
+
+    startButton.addEventListener("click", () => {
+        if (running) {
+            stopAutoClicker();
+            setStatus("Auto clicker stopped");
+        } else {
+            startAutoClicker();
+        }
+    });
+
+    intervalInput.addEventListener("input", () => {
+        const value = Number(intervalInput.value);
+        intervalLabel.textContent =
+            Number.isFinite(value) && value > 0 ? `${value} ms` : "—";
+
+        if (running) {
+            stopAutoClicker();
+            setStatus("Interval changed; press Start again");
+        }
+    });
+
+    singleClickButton.addEventListener("click", sendClick);
+
+    resetButton.addEventListener("click", () => {
+        clickCount = 0;
+        clickCountLabel.textContent = "0";
+        setStatus("Click counter reset");
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key.toLowerCase() === "control" && !event.repeat) {
+            // Avoid opening the panel while typing in a text field.
+            const tag = event.target?.tagName;
+            if (tag === "INPUT" || tag === "TEXTAREA") return;
+
+            event.preventDefault();
+            setPanelOpen(!panel.classList.contains("visible"));
+        }
+
+        if (event.key === "Escape" && panel.classList.contains("visible")) {
+            event.stopPropagation();
+            setPanelOpen(false);
+        }
+    }, true);
+
+    window.addEventListener("blur", releaseAllKeys);
+
+    frame.addEventListener("load", () => {
+        stopAutoClicker();
+        releaseAllKeys();
+        setStatus("Page loaded; controls ready");
+    });
+
+    // Prevent a running timer from surviving navigation or page closure.
+    window.addEventListener("pagehide", () => {
+        stopAutoClicker();
+        releaseAllKeys();
+    });
+
+    setStatus("Controls ready");
+})();
+
 
 /* ============================================================
    INITIAL RENDER
